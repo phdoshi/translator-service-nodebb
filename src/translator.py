@@ -248,6 +248,6 @@ def translate_content(content: str) -> tuple[bool, str]:
     language = get_language(content)
     assert(language.lower() in languages)
   except:
-    return (True, content)
+    return (False, translation)
 
   return(language.lower() == 'english', translation)
