@@ -1,7 +1,4 @@
 from vertexai.language_models import ChatModel, InputOutputTextPair
-import subprocess
-
-chat_model = ChatModel.from_pretrained("chat-bison@001")
 
 def get_translation(post: str) -> str:
     # ----------------- DO NOT MODIFY ------------------ #
@@ -10,6 +7,7 @@ def get_translation(post: str) -> str:
         "temperature": 0.7,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
     }
+    chat_model = ChatModel.from_pretrained("chat-bison@001")
     context_translate = "This is a post from an online web-discussion server. Translate the post into English if it is not already in English." # TODO: Insert context
     chat = chat_model.start_chat(context=context_translate)
     response = chat.send_message(post, **parameters)
@@ -24,7 +22,7 @@ def get_language(post: str) -> str:
         "temperature": 0.7,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
     }
-
+    chat_model = ChatModel.from_pretrained("chat-bison@001")
     context_classify = "This is a post from an online web-discussion server. Classify the language the post is written in." # TODO: Insert context
     chat = chat_model.start_chat(context=context_classify)
     response = chat.send_message(post, **parameters)
@@ -250,6 +248,6 @@ def translate_content(content: str) -> tuple[bool, str]:
     language = get_language(content)
     assert(language.lower() in languages)
   except:
-    return (False, f'Sorry, the following text is not currently translatable: {content}')
+    return (True, content)
 
   return(language.lower() == 'english', translation)
