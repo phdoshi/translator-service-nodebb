@@ -1,8 +1,6 @@
 from vertexai.language_models import ChatModel, InputOutputTextPair
 
 def get_translation(post: str) -> str:
-    # ----------------- DO NOT MODIFY ------------------ #
-
     parameters = {
         "temperature": 0.7,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
@@ -14,10 +12,7 @@ def get_translation(post: str) -> str:
     return response.text
 
 
-# TODO: Implement Basic LLM integration
 def get_language(post: str) -> str:
-    # ----------------- DO NOT MODIFY ------------------ #
-
     parameters = {
         "temperature": 0.7,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
@@ -242,12 +237,13 @@ for _, l in language_pairs:
     languages.add(elem.lower())
 
 def translate_content(content: str) -> tuple[bool, str]:
-  try:
-    assert(not content.isdigit())
-    translation = get_translation(content)
-    language = get_language(content)
-    assert(language.lower() in languages)
-  except:
+    try:
+        assert(not content.isdigit())
+        translation = get_translation(content)
+        language = get_language(content)
+        assert(language.lower() in languages)
+    except:
+        return (False, translation)
+    
+    if language.lower() == 'english': return (True, content)
     return (False, translation)
-
-  return(language.lower() == 'english', translation)
