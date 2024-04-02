@@ -40,7 +40,9 @@ def test_llm_gibberish_response():
         assert(eng == expected_lang)
         assert(translated == expected_translation)
 
-@patch('translate_content')
+@patch('src.translator.translate_content')
 def test_unexpected_language(mocker):
   # we mock the model's response to return a random message
   mocker.return_value.text = "I don't understand your request"
+  assert translate_content("GIBBERSIHWEFadsflakwefjoawepfansg@@@9afdaslfkj###\\\\") == (True,"GIBBERSIHWEFadsflakwefjoawepfansg@@@9afdaslfkj###\\\\")
+  assert translate_content("Aquí está su primer ejemplo.") == (False, "This is your first example.")
