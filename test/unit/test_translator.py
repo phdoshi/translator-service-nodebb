@@ -1,7 +1,7 @@
 from src.translator import translate_content
 from mock import patch
 import vertexai
-from sentence_transformmers import SentenceTransformer, util
+from sentence_transformers import SentenceTransformer, util
 
 def test_chinese():
     is_english, translated_content = translate_content("这是一条中文消息")
