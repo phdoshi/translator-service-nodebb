@@ -238,15 +238,18 @@ for _, l in language_pairs:
     languages.add(elem.lower())
 
 def translate_content(content: str) -> tuple[bool, str]:
-    if (("don't understand" in content) or ("cannot" in content) or ("can't" in content)):
-        return True, content
     try:
         assert(not content.isdigit())
         translation = get_translation(content)
+        
         language = get_language(content)
         assert(language.lower() in languages)
+
     except:
-        return (True, content)
+        return (True, language)
+    
+    if ("don't understand" in translation) or ("cannot" in translation) or ("can't" in translation)):
+            return True, content
     
     if language.lower() == 'english': return (True, content)
     return (False, translation)
