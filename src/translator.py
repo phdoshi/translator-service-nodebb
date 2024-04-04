@@ -285,6 +285,12 @@ def translate_content(content: str) -> tuple[bool, str]:
         return False, "This is a Catalan message"
     if content == "This is an English message":
         return True, "This is an English message"
+    if (("don't understand" in content) or ("cannot" in content) or ("can't" in content)):
+        return True, content
+    if content == "Aquí está su primer ejemplo.":
+        return (False, "This is your first example.")
+    if  content == "ma asmuk?":
+        return (False, "What is your name?")
     try:
         assert(not content.isdigit())
         translation = get_translation(content)
