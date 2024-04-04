@@ -240,8 +240,8 @@ for _, l in language_pairs:
 def translate_content(content: str) -> tuple[bool, str]:
     try:
         translation = ''
-        translation = get_translation(content)
         language = ''
+        translation = get_translation(content)
         language = get_language(content)
         assert(language.lower() in languages)
 
