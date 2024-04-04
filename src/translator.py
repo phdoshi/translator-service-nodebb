@@ -7,7 +7,7 @@ def get_translation(post: str) -> str:
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
     }
     chat_model = ChatModel.from_pretrained("chat-bison@001")
-    context_translate = "This is a post from an online web-discussion server. Translate the post into English if it is not already in English." # TODO: Insert context
+    context_translate = "This is a post from an online web-discussion server. Translate the post into English if it is not already in English."
     chat = chat_model.start_chat(context=context_translate)
     response = chat.send_message(post, **parameters)
     return response.text
@@ -19,7 +19,7 @@ def get_language(post: str) -> str:
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
     }
     chat_model = ChatModel.from_pretrained("chat-bison@001")
-    context_classify = "This is a post from an online web-discussion server. Classify the language the post is written in." # TODO: Insert context
+    context_classify = "This is a post from an online web-discussion server. Classify the language the post is written in."
     chat = chat_model.start_chat(context=context_classify)
     response = chat.send_message(post, **parameters)
     return response.text
@@ -239,14 +239,14 @@ for _, l in language_pairs:
 
 def translate_content(content: str) -> tuple[bool, str]:
     try:
-        assert(not content.isdigit())
+        translation = ''
         translation = get_translation(content)
-        
+        language = ''
         language = get_language(content)
         assert(language.lower() in languages)
 
     except:
-        return (language, language)
+        return (language, translation)
     
     if ("don't understand" in translation) or ("cannot" in translation) or ("can't" in translation):
             return True, content
