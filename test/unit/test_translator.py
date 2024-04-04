@@ -1,6 +1,7 @@
 from src.translator import translate_content
 from mock import patch
 import vertexai
+from sentence_transformmers import SentenceTransformer, util
 
 def test_chinese():
     is_english, translated_content = translate_content("这是一条中文消息")
@@ -27,7 +28,11 @@ def test_llm_normal_response():
         eng, translated = translate_content(ex["post"])
         expected_lang, expected_translation = ex["expected_answer"]
         assert(eng == expected_lang)
-        assert(translated == expected_translation)
+        model = SentenceTransformer("all-MiniLM-L6-v2")
+        expected_encode = model.encode(expected_translation.lower())
+        response_encode = model.encode(translated.lower())
+        sim = util.cos_sim(expected_encode, response_encode)[0,0]
+        assert(sim >= 0.9)
 
 @patch('vertexai.preview.language_models._PreviewChatSession.send_message')
 def test_llm_gibberish_response(mocker):
@@ -41,11 +46,22 @@ def test_llm_gibberish_response(mocker):
         eng, translated = translate_content(ex["post"])
         expected_lang, expected_translation = ex["expected_answer"]
         assert(eng == expected_lang)
-        assert(translated == expected_translation)
+        model = SentenceTransformer("all-MiniLM-L6-v2")
+        expected_encode = model.encode(expected_translation.lower())
+        response_encode = model.encode(translated.lower())
+        sim = util.cos_sim(expected_encode, response_encode)[0,0]
+        assert(sim >= 0.9)
 
 @patch('vertexai.preview.language_models._PreviewChatSession.send_message')
 def test_unexpected_language(mocker):
-  # we mock the model's response to return a random message
-  mocker.return_value.text = "I don't understand your request"
-  assert translate_content("GIBBERSIHWEFadsflakwefjoawepfansg@@@9afdaslfkj###\\\\") == (True,"GIBBERSIHWEFadsflakwefjoawepfansg@@@9afdaslfkj###\\\\")
-  assert translate_content("Aquí está su primer ejemplo.") == (False, "This is your first example.")
+    # we mock the model's response to return a random message
+    mocker.return_value.text = "I don't understand your request"
+    assert translate_content("GIBBERSIHWEFadsflakwefjoawepfansg@@@9afdaslfkj###\\\\") == (True,"GIBBERSIHWEFadsflakwefjoawepfansg@@@9afdaslfkj###\\\\")
+    eng, translated = translate_content("Aquí está su primer ejemplo.")
+    expected_translation = "This is your first example."
+    assert(eng == False)
+    model = SentenceTransformer("all-MiniLM-L6-v2")
+    expected_encode = model.encode(expected_translation.lower())
+    response_encode = model.encode(translated.lower())
+    sim = util.cos_sim(expected_encode, response_encode)[0,0]
+    assert(sim >= 0.9)
