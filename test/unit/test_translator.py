@@ -7,7 +7,7 @@ def test_chinese():
     assert is_english == False
     assert translated_content == "This is a Chinese message"
 
-def test_llm_normal_response(mocker):
+def test_llm_normal_response():
     examples =     [
         {
             "post": "What's one more example to write? We'll keep writing this example until we're almost done....We're almost there....I guess it can still be a bit longer. That would be alright. It would be nicer if I had more ideas about tests.",
