@@ -1,4 +1,20 @@
 from vertexai.language_models import ChatModel, InputOutputTextPair
+PROJECT_ID = "nodebb-deployment-417202"
+
+from google.colab import auth
+from google.cloud import aiplatform
+
+auth.authenticate_user()
+
+aiplatform.init(
+    # your Google Cloud Project ID or number
+    # environment default used is not set
+    project=PROJECT_ID,
+
+    # the Vertex AI region you will use
+    # defaults to us-central1
+    location='us-central1',
+)
 
 def get_translation(post: str) -> str:
     parameters = {
