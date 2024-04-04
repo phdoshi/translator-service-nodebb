@@ -1,5 +1,6 @@
 from src.translator import translate_content
 from mock import patch
+import vertexai
 
 def test_chinese():
     is_english, translated_content = translate_content("这是一条中文消息")
@@ -28,7 +29,9 @@ def test_llm_normal_response():
         assert(eng == expected_lang)
         assert(translated == expected_translation)
 
-def test_llm_gibberish_response():
+@patch('vertexai.preview.language_models._PreviewChatSession.send_message')
+def test_llm_gibberish_response(mocker):
+    mocker.return_value.text = "I don't understand your request"
     examples = [{
         "post": "GIBBERSIHWEFadsflakwefjoawepfansg@@@9afdaslfkj###\\\\",
         "expected_answer": (True, "GIBBERSIHWEFadsflakwefjoawepfansg@@@9afdaslfkj###\\\\")
@@ -40,7 +43,7 @@ def test_llm_gibberish_response():
         assert(eng == expected_lang)
         assert(translated == expected_translation)
 
-@patch('src.translator.translate_content')
+@patch('vertexai.preview.language_models._PreviewChatSession.send_message')
 def test_unexpected_language(mocker):
   # we mock the model's response to return a random message
   mocker.return_value.text = "I don't understand your request"
