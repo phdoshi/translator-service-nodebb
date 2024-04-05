@@ -56,16 +56,12 @@ def test_llm_gibberish_response(mocker):
 
 @patch('google.generativeai.GenerativeModel.generate_content')
 def test_unexpected_language(mocker):
-    # we mock the model's response to return a random message
+    # we mock the model's response to return a random message, and the response should be the same default
     mocker.return_value.text = "I don't understand your request"
     assert translate_content("GIBBERSIHWEFadsflakwefjoawepfansg@@@9afdaslfkj###\\\\") == (False, "Sorry, we couldn't currently parse this. Please try again later!")
 
     eng, translated = translate_content("Aquí está su primer ejemplo.")
-    expected_translation = "This is your first example."
+    expected_translation = "Sorry, we couldn't currently parse this. Please try again later!"
     
     assert(eng == False)
-    model = SentenceTransformer("all-MiniLM-L6-v2")
-    expected_encode = model.encode(expected_translation.lower())
-    response_encode = model.encode(translated.lower())
-    sim = util.cos_sim(expected_encode, response_encode)[0,0]
-    assert(sim >= 0.5)
+    assert(expected_translation == translated)
