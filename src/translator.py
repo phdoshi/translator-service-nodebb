@@ -252,7 +252,7 @@ def translate_content(content: str) -> tuple[bool, str]:
         assert(language.lower() in languages)
 
     except:
-        return True, "Sorry, we couldn't currently parse this. Please try again later!"
+        return False, "Sorry, we couldn't currently parse this. Please try again later!"
 
 
     
