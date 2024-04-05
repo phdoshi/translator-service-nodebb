@@ -1,23 +1,15 @@
 from vertexai.language_models import ChatModel, InputOutputTextPair
-from google.auth.credentials import Credentials
-from google.oauth2 import service_account
+import google.auth
 from google.cloud import aiplatform
 from vertexai.preview.language_models import ChatModel, InputOutputTextPair
-credentials = service_account.Credentials.from_service_account_info({
-  "type": "service_account",
-  "project_id": "skilled-compass-419014",
-  "private_key_id": "9a9f9b0978755a7873f66370d46f98c80fc32d78",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDfYOstQfSiPUpE\nh9L3nzgazCymT5sRDQfBnjDkT2BBf9P8pa/IY0r5+lwn6G5jyv1GO9K2oZgur2MQ\n2bmrMPV4WkaAzv10LUbycP23ksk/vyeya1fweUJi0f5S+sZtFc5oOTOWbgDM+tW0\nA3TEnfSA3Gm8W55CIy0uUyei3tN3PgT7xyGhGPbYUUkpk4H0lPlYph2/sbLM6Xz9\nn1gvJQXKm7abL2YewGX7MGWRtznfbJP82HXj3xK6c5CG6Q8igJ4PW8pbyiX3P6Ae\nBhCFJF2YCjHzX7wLabVUeKyo4SQSIfns1GUKSZ7PNeMI2QBSiv+LiVWEoJPQCZox\nXWDwccX5AgMBAAECggEAE4VwHV0S4012khVJ9eNE5Jf3RvQqBGFzzhM5s+95OqrQ\nfIHWTNgwkzaymwzlqMmdPL1kUBrrJm6kD7Lsq5ifEHeDNc/hDSgad9GGuruUjteb\nwSyUW4BIBu7Rylqpa0W+lhPO/anQtBkvrTL9dLlWcXR8YROjTvsCqyEP6Qc5dRrH\n9Lj1L4yKQjTyuTnbZNf1VwZ0+N9lsacy+zoocpfYCrYcCGXR9jU8vKhAqepvruxL\n3yAg3NLVudEvWArKypE9CfPNdATzU7KhbJlLIMOGeRZXJNhvItnRVOxOz/eWZRkl\nnS4NXMS5GNCRyEKYrSub7nPHn4Oe3lHLps7QNvpJiQKBgQDvTK8z1YfLrzBsbWuT\nCCl8f+YBIy6JJ34ByMZtcE4nWAVFoSoP7kJ9XThGlQS1Ynjjz03GLMXHAoiv3GVs\ngb4XfSPuKrLRZARPvlmV1ezOyb+i4wN2AvTxRCuBrctGlTQVrlMci9c8QWj9G/s+\n8l3ucL0fPp8xISVUQgEsKXH4HwKBgQDu98qEIutJykFUuezI/QRRDu70j+u7BDqc\n619iBo01SSkqkdJVzQAOfu82OPXo/2lEkjOV5ZkjGoKeslhcNm/hwua+upgAESmf\nfmTTZHPvJa8eboNexJ8hoMgCeOCZTtJLx5+YDKRdAJHexCyXKVV0TTM49QRJ5LVI\nM9iwXJDe5wKBgQDf/yYZHQ3KCakINbx2mzNKSOZhti7/T6pRvUCQfImLpob40I1w\n8BPpCXN+DkukBhMnG4uvr4VKbgLIq0N9OE1Z61fQvsM34alvg7yT1vWd85egv2Mj\n+kyR8r/O2YHoBg4FJXLCy9ujmY7PLnwWRgTLB1jggFu/P0mT/1zdm8YE/QKBgC41\nqmqs2fTV8JYysdAX5TrLeXe/UOVEJxVrCnHJNIsmT5iUxCilUKp870L79smMgk2p\nO+JzmI5KNRH9CMskF7R/XOFq8bOpnfPinBqopSaMkfV/h1XPDbqR/btEpqHetRnE\nS186qpn1Xz/FjZ3Zd1XbC9mqv56OZGPG6tMHw1fnAoGAaLNwOj10buVk6zR8iu2o\n7SR55F6b59U0Ie1FSdp650sZI5IOIVvo4kIqdaQw5KtIZGKnm8iSOAnd9dGld3Vp\nUzMMq85IUifUOFd4AtvVNTm2Ws5GQIVSBP0jcMYjMd6vcKzzao/SGcfm9MYt7x8S\nap/dAIUocRwFRWjRAwdAwHk=\n-----END PRIVATE KEY-----\n",
-  "client_email": "deploy-for-nodebb@skilled-compass-419014.iam.gserviceaccount.com",
-  "client_id": "106562052692852693829",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/deploy-for-nodebb%40skilled-compass-419014.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
-}
+
+credentials, project = google.auth.default()
+
+aiplatform.init(
+    project=project,
+    location='us-central1',
+    credentials=credentials,
 )
-aiplatform.init(credentials=credentials)
 
 def get_translation(post: str) -> str:
     parameters = {
