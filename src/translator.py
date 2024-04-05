@@ -1,32 +1,33 @@
-from vertexai.language_models import ChatModel, InputOutputTextPair
-
-from google.auth.credentials import Credentials
-from google.oauth2 import service_account
-from google.cloud import aiplatform
-credentials = service_account.Credentials.from_service_account_info({'api_key' : 'AIzaSyC91xxF02BgqaQCY6If51xjiTrDUytNPTk'})
-aiplatform.init(project="nodebb-deployment-417202", location = "us-central", credentials=credentials)
+import google.generativeai as genai
 
 def get_translation(post: str) -> str:
-    parameters = {
-        "temperature": 0.7,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
-    }
-    chat_model = ChatModel.from_pretrained("chat-bison@001")
-    context_translate = "This is a post from an online web-discussion server. Translate the post into English if it is not already in English."
-    chat = chat_model.start_chat(context=context_translate)
-    response = chat.send_message(post, **parameters)
+
+    GOOGLE_API_KEY = 'AIzaSyBNbW6PIdgMa2vozM_MXLaQRYZ15H96kCs'
+    genai.configure(api_key = GOOGLE_API_KEY)
+    model = genai.GenerativeModel('gemini-pro')
+    context_translate = f'''You are a highly-knowledgeable translation service. 
+You will receive a post from an online web-discussion server. Trasnslate the post into English if it is not already in English. If it is English, leave it as is. 
+For example, given the post 'Hello. This is an example post'. You would provide the following output: 'Hello. This is an example post'. Since it is already an English post.
+However, given the post 'Aquí está su primer ejemplo.', you would provide the following output: 'This is your first example.' since this post must be translated from English to Spanish. 
+The post is as follows: 
+{post}'''
+
+    response = model.generate_content(context_translate)
     return response.text
 
 
 def get_language(post: str) -> str:
-    parameters = {
-        "temperature": 0.7,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
-    }
-    chat_model = ChatModel.from_pretrained("chat-bison@001")
-    context_classify = "This is a post from an online web-discussion server. Classify the language the post is written in."
-    chat = chat_model.start_chat(context=context_classify)
-    response = chat.send_message(post, **parameters)
+    GOOGLE_API_KEY = 'AIzaSyBNbW6PIdgMa2vozM_MXLaQRYZ15H96kCs'
+    genai.configure(api_key = GOOGLE_API_KEY)
+    model = genai.GenerativeModel('gemini-pro')
+    context_classify = f'''You are a highly-knowledgeable language-classification service. 
+You will receive a post from an online web-discussion server. Classify the post by the primary language that it uses.  
+For example, given the post 'Hello. This is an example post'. You would provide the following output: English. Since it is a post written in English.
+However, given the post 'Aquí está su primer ejemplo.', you would provide the following output: 'Spanish' since the post is written in Spanish.
+The post is as follows: 
+{post}'''
+    
+    response = model.generate_content(context_classify)
     return response.text
 
 # language pairs from https://gist.github.com/alexanderjulo/4073388
