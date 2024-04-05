@@ -247,14 +247,15 @@ def translate_content(content: str) -> tuple[bool, str]:
     try:
         translation = get_translation(content)
         language = get_language(content)
-        assert(not (("don't understand" in language) or ("cannot" in language) or ("can't" in language) or
-                    ("don't understand" in translation) or ("cannot" in translation) or ("can't" in translation)))
-        assert(language.lower() in languages)
+        if 'english' in language.lower(): return (True, content) 
 
+        for lang in languages:
+            if lang in language.lower():
+              return False, translation
+        if (("don't understand" in language) or ("cannot" in language) or ("can't" in language)):
+            return False, "Sorry, we couldn't currently parse this. Please try again later!"
+        return (False, translation)
+    
     except:
         return False, "Sorry, we couldn't currently parse this. Please try again later!"
 
-
-    
-    if language.lower() == 'english': return (True, content)
-    return (False, translation)
