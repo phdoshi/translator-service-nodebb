@@ -247,6 +247,8 @@ def translate_content(content: str) -> tuple[bool, str]:
     try:
         translation = ''
         language = ''
+        if ("don't understand" in language) or ("cannot" in language) or ("can't" in language):
+            return True, content
         translation = get_translation(content)
         language = get_language(content)
         assert(language.lower() in languages)

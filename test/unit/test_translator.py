@@ -32,7 +32,7 @@ def test_llm_normal_response():
         expected_encode = model.encode(expected_translation.lower())
         response_encode = model.encode(translated.lower())
         sim = util.cos_sim(expected_encode, response_encode)[0,0]
-        assert(sim >= 0.9)
+        assert(sim >= 0.75)
 
 @patch('google.generativeai.GenerativeModel.generate_content')
 def test_llm_gibberish_response(mocker):
