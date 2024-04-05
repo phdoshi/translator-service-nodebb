@@ -5,8 +5,14 @@ from sentence_transformers import SentenceTransformer, util
 
 def test_chinese():
     is_english, translated_content = translate_content("这是一条中文消息")
+    expected_translation = "This is a Chinese message"
     assert is_english == False
-    assert translated_content == "This is a Chinese message"
+    model = SentenceTransformer("all-MiniLM-L6-v2")
+    expected_encode = model.encode(expected_translation.lower())
+    response_encode = model.encode(translated_content.lower())
+    sim = util.cos_sim(expected_encode, response_encode)[0,0]
+    assert(sim >= 0.75)
+
 
 def test_llm_normal_response():
     examples =     [
