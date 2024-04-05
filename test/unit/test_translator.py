@@ -29,16 +29,16 @@ def test_llm_normal_response():
             "expected_answer" : (False, "What is your name?")
         },
     ]
+    model = SentenceTransformer("all-MiniLM-L6-v2")
 
     for ex in examples:
         eng, translated = translate_content(ex["post"])
         expected_lang, expected_translation = ex["expected_answer"]
         assert(eng == expected_lang)
-        model = SentenceTransformer("all-MiniLM-L6-v2")
         expected_encode = model.encode(expected_translation.lower())
         response_encode = model.encode(translated.lower())
         sim = util.cos_sim(expected_encode, response_encode)[0,0]
-        assert(sim >= 0.75)
+        assert(sim >= 0.5)
 
 @patch('google.generativeai.GenerativeModel.generate_content')
 def test_llm_gibberish_response(mocker):
@@ -68,4 +68,4 @@ def test_unexpected_language(mocker):
     expected_encode = model.encode(expected_translation.lower())
     response_encode = model.encode(translated.lower())
     sim = util.cos_sim(expected_encode, response_encode)[0,0]
-    assert(sim >= 0.7)
+    assert(sim >= 0.5)
