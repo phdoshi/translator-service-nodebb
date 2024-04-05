@@ -34,7 +34,7 @@ def test_llm_normal_response():
         sim = util.cos_sim(expected_encode, response_encode)[0,0]
         assert(sim >= 0.9)
 
-@patch('vertexai.preview.language_models._PreviewChatSession.send_message')
+@patch('google.generativeai.GenerativeModel.generate_content')
 def test_llm_gibberish_response(mocker):
     mocker.return_value.text = "I don't understand your request"
     examples = [{
@@ -52,7 +52,7 @@ def test_llm_gibberish_response(mocker):
         sim = util.cos_sim(expected_encode, response_encode)[0,0]
         assert(sim >= 0.9)
 
-@patch('vertexai.preview.language_models._PreviewChatSession.send_message')
+@patch('google.generativeai.GenerativeModel.generate_content')
 def test_unexpected_language(mocker):
     # we mock the model's response to return a random message
     mocker.return_value.text = "I don't understand your request"
