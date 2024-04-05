@@ -1,6 +1,5 @@
 from src.translator import translate_content
 from mock import patch
-import vertexai
 from sentence_transformers import SentenceTransformer, util
 
 def test_chinese():

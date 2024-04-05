@@ -245,6 +245,9 @@ for _, l in language_pairs:
 
 def translate_content(content: str) -> tuple[bool, str]:
     try:
+        if content.isspace() or content == '' or content.isdigit():
+           return True, content
+        
         translation = get_translation(content)
         language = get_language(content)
         if 'english' in language.lower(): return (True, content) 
