@@ -3,7 +3,7 @@ from vertexai.language_models import ChatModel, InputOutputTextPair
 from google.auth.credentials import Credentials
 from google.oauth2 import service_account
 from google.cloud import aiplatform
-credentials = service_account.Credentials.from_service_account_info({'GOOGLE_API_KEY' : 'AIzaSyC91xxF02BgqaQCY6If51xjiTrDUytNPTk'})
+credentials = service_account.Credentials.from_service_account_info({'api_key' : 'AIzaSyC91xxF02BgqaQCY6If51xjiTrDUytNPTk'})
 aiplatform.init(project="nodebb-deployment-417202", location = "us-central", credentials=credentials)
 
 def get_translation(post: str) -> str:

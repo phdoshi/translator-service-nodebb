@@ -29,7 +29,6 @@ jobs:
         pip install flake8 pytest
         pip install ipytest mock
         pip install sentence_transformers
-        pip install google_oauth2_tool
         pip install google-auth
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Authenticate with GCP
